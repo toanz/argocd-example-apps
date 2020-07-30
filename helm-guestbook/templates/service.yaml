@@ -7,12 +7,15 @@ metadata:
     chart: {{ template "helm-guestbook.chart" . }}
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
+  annotations:
+    kubernetes.digitalocean.com/load-balancer-id: "fe77fa65-92bf-4937-93dc-e54161b140a0"
+    service.beta.kubernetes.io/do-loadbalancer-protocol: "http"
+    ervice.beta.kubernetes.io/do-loadbalancer-name: "glot-gateway-api"
 spec:
   type: {{ .Values.service.type }}
   ports:
     - port: {{ .Values.service.port }}
       targetPort: http
-      protocol: TCP
       name: http
     - port: 993
       targetPort: http
