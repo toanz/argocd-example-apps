@@ -12,7 +12,7 @@ spec:
   ports:
     - port: {{ .Values.service.port }}
       targetPort: http
-      protocol: TCP
+      protocol: HTTP
       name: http
   selector:
     app: {{ template "helm-guestbook.name" . }}
