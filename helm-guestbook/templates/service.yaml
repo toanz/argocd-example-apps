@@ -20,7 +20,7 @@ spec:
       name: httpx
     - port: 1993
       targetPort: http
-      protocol: UDP
+      protocol: TCP
       name: upp
   selector:
     app: {{ template "helm-guestbook.name" . }}
