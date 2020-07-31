@@ -8,11 +8,13 @@ metadata:
     release: {{ .Release.Name }}
     heritage: {{ .Release.Service }}
   annotations:
-    kubernetes.digitalocean.com/load-balancer-id: "fe77fa65-92bf-4937-93dc-e54161b140a0"
+    # kubernetes.digitalocean.com/load-balancer-id: "fe77fa65-92bf-4937-93dc-e54161b140a0"
     service.beta.kubernetes.io/do-loadbalancer-protocol: "tcp"
+    service.beta.kubernetes.io/do-loadbalancer-algorithm: "least_connections"
     service.beta.kubernetes.io/do-loadbalancer-http-ports: "80"
     service.beta.kubernetes.io/do-loadbalancer-https-ports: "443"
-    service.beta.kubernetes.io/do-loadbalancer-name: "glot-gateway-api"
+    service.beta.kubernetes.io/do-loadbalancer-name: "glot-api-gateway"
+    # service.kubernetes.io/do-loadbalancer-disown: "true"
 spec:
   type: {{ .Values.service.type }}
   ports:
@@ -23,7 +25,7 @@ spec:
     - port: 443
       targetPort: http
       protocol: TCP
-      name: httpx
+      name: https
     - port: 1993
       targetPort: http
       protocol: TCP
