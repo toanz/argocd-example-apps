@@ -12,11 +12,13 @@ metadata:
     service.beta.kubernetes.io/do-loadbalancer-protocol: "tcp"
     service.beta.kubernetes.io/do-loadbalancer-algorithm: "least_connections"
     service.beta.kubernetes.io/do-loadbalancer-http-ports: "80"
-    service.beta.kubernetes.io/do-loadbalancer-https-ports: "443"
+    service.beta.kubernetes.io/do-loadbalancer-tls-ports: "443"
     service.beta.kubernetes.io/do-loadbalancer-tls-passthrough: "true"
+    service.beta.kubernetes.io/do-loadbalancer-enable-proxy-protocol: "true"
     service.beta.kubernetes.io/do-loadbalancer-name: "glot-api-gateway"
     # service.kubernetes.io/do-loadbalancer-disown: "true"
 spec:
+  externalTrafficPolicy: Local
   type: {{ .Values.service.type }}
   ports:
     - port: {{ .Values.service.port }}
