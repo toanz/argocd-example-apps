@@ -1,0 +1,12 @@
+bases:
+- https://raw.githubusercontent.com/argoproj-labs/argocd-notifications/v0.7.0/manifests/install.yaml
+
+# additional resources like ingress rules, cluster and repository secrets.
+resources:
+# - clusters-secrets.yaml
+# - repos-secrets.yaml
+
+# changes to config maps
+patchesStrategicMerge:
+- overlays/argocd-notifications-secret.yaml
+- overlays/argocd-notifications-cm.yaml
