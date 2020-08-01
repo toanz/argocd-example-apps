@@ -17,9 +17,16 @@ data:
       - slack:test3
       selector: test=true
     triggers:
-      # Enable existing built-in trigger
+      # enable sync status notifications triggers
       - name: on-sync-status-unknown
         enabled: true
+      - name: on-sync-failed
+        enabled: true
+      - name: on-sync-succeeded
+        enabled: true
+      - name: on-health-degraded
+        enabled: true
+      # Enable existing built-in trigger
       # Define your custom trigger
       - name: my-custom-trigger
         condition: app.status.sync.status == 'Unknown'
