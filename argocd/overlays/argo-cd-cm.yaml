@@ -11,7 +11,7 @@ data:
           args: ["helm dependency build"]
         generate:
           command: [sh, -c]
-          args: ["helm template . > all.yaml && kustomize build"]
+          args: ["helm template . $HP > all.yaml && kustomize build $KP"]
 kind: ConfigMap
 metadata:
   name: argocd-cm
