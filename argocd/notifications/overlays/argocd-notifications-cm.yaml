@@ -14,7 +14,7 @@ data:
       trigger: on-sync-status-unknown
     # global subscription restricted to applications with matching labels only
     - recipients:
-      - slack:test3
+      - slack:test
       selector: test=true
     triggers:
       # enable sync status notifications triggers
