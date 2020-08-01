@@ -4,13 +4,32 @@ metadata:
   name: argocd-notifications-cm
 data:
   config.yaml: |
+    subscriptions:
+    # global subscription for all type of notifications
+    - recipients:
+      - slack:glotdojo
+    # subscription for on-sync-status-unknown trigger notifications
+    - recipients:
+      - slack:general
+      trigger: on-sync-status-unknown
+    # global subscription restricted to applications with matching labels only
+    - recipients:
+      - slack:test3
+      selector: test=true
     triggers:
-      # enable sync status notifications triggers
+      # Enable existing built-in trigger
       - name: on-sync-status-unknown
         enabled: true
-      - name: on-sync-failed
-        enabled: true
+      # Define your custom trigger
+      - name: my-custom-trigger
+        condition: app.status.sync.status == 'Unknown'
+        template: my-custom-template
+    templates:
+      # Add your custom template
+      - name: my-custom-template
+        title: Hello {{.app.metadata.name}}
+        body: |
+          Application details: {{.context.argocdUrl}}/applications/{{.app.metadata.name}}.
+      # Override one field in built-in template
       - name: on-sync-succeeded
-        enabled: true
-      - name: on-health-degraded
-        enabled: true
+        title: Application {{.app.metadata.name}} sync status is {{.app.status.sync.status}}"
