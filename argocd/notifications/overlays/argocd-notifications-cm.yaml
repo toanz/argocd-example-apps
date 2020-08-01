@@ -34,7 +34,7 @@ data:
     templates:
       # Add your custom template
       - name: my-custom-template
-        title: Hello {{.app.metadata.name}}
+        title: Hello  {{.app.metadata.name}}
         body: |
           Application details: {{.context.argocdUrl}}/applications/{{.app.metadata.name}}.
       # Override one field in built-in template
