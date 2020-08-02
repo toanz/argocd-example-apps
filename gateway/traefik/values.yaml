@@ -38,6 +38,7 @@ traefik:
   additionalArguments:
     - "--log.level=DEBUG"
     - "--entrypoints.websecure.http.tls"
+    - "--entryPoints.web.proxyProtocol.insecure=true"
     - "--providers.kubernetesIngress.ingressClass=traefik-cert-manager"
     - "--ping"
     - "--metrics.prometheus"
