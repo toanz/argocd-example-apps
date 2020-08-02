@@ -57,6 +57,7 @@ traefik:
       service.beta.kubernetes.io/do-loadbalancer-tls-passthrough: "true"
       service.beta.kubernetes.io/do-loadbalancer-enable-proxy-protocol: "true"
       service.beta.kubernetes.io/do-loadbalancer-name: "glot-gateway"
+      service.kubernetes.io/do-loadbalancer-disown: "true"
     # Additional entries here will be added to the service spec. Cannot contains
     # type, selector or ports entries.
     spec: 
