@@ -16,7 +16,7 @@ metadata:
     service.beta.kubernetes.io/do-loadbalancer-tls-passthrough: "true"
     service.beta.kubernetes.io/do-loadbalancer-enable-proxy-protocol: "true"
     service.beta.kubernetes.io/do-loadbalancer-name: "glot-api-gateway"
-    # service.kubernetes.io/do-loadbalancer-disown: "true"
+    service.kubernetes.io/do-loadbalancer-disown: "true"
 spec:
   # externalTrafficPolicy: Local
   type: {{ .Values.service.type }}
