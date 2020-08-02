@@ -1,98 +1,101 @@
-#
-# Configure the deployment
-#
-deployment:
-  enabled: true
-  # Number of pods of the deployment
-  replicas: 2
 
-# Create an IngressRoute for the dashboard
-ingressRoute:
-  dashboard:
+# config for Traefik
+traefik:
+  #
+  # Configure the deployment
+  #
+  deployment:
     enabled: true
-    # Additional ingressRoute annotations (e.g. for kubernetes.io/ingress.class)
-    annotations: {}
-    # Additional ingressRoute labels (e.g. for filtering IngressRoute by custom labels)
-    labels: {}
+    # Number of pods of the deployment
+    replicas: 2
 
-rollingUpdate:
-  maxUnavailable: 1
-  maxSurge: 1
+  # Create an IngressRoute for the dashboard
+  ingressRoute:
+    dashboard:
+      enabled: true
+      # Additional ingressRoute annotations (e.g. for kubernetes.io/ingress.class)
+      annotations: {}
+      # Additional ingressRoute labels (e.g. for filtering IngressRoute by custom labels)
+      labels: {}
 
-#
-# Configure providers
-#
-providers:
-  kubernetesCRD:
+  rollingUpdate:
+    maxUnavailable: 1
+    maxSurge: 1
+
+  #
+  # Configure providers
+  #
+  providers:
+    kubernetesCRD:
+      enabled: true
+    kubernetesIngress:
+      enabled: true
+
+  globalArguments:
+    - "--global.checknewversion"
+    - "--global.sendanonymoususage"
+
+  additionalArguments:
+    - "--log.level=DEBUG"
+    - "--entrypoints.websecure.http.tls"
+    - "--providers.kubernetesIngress.ingressClass=traefik-cert-manager"
+    - "--ping"
+    - "--metrics.prometheus"
+
+  # Options for the main traefik service, where the entrypoints traffic comes
+  # from.
+  service:
     enabled: true
-  kubernetesIngress:
-    enabled: true
+    type: LoadBalancer
+    # Additional annotations (e.g. for cloud provider specific config)
+    annotations: 
+      service.beta.kubernetes.io/do-loadbalancer-protocol: "tcp"
+      service.beta.kubernetes.io/do-loadbalancer-algorithm: "least_connections"
+      service.beta.kubernetes.io/do-loadbalancer-http-ports: "80"
+      service.beta.kubernetes.io/do-loadbalancer-tls-ports: "443"
+      service.beta.kubernetes.io/do-loadbalancer-tls-passthrough: "true"
+      service.beta.kubernetes.io/do-loadbalancer-enable-proxy-protocol: "true"
+      service.beta.kubernetes.io/do-loadbalancer-name: "glot-gateway"
+    # Additional entries here will be added to the service spec. Cannot contains
+    # type, selector or ports entries.
+    spec: 
+      externalTrafficPolicy: Local
 
-globalArguments:
-  - "--global.checknewversion"
-  - "--global.sendanonymoususage"
+  # Configure ports
+  ports:
+    # The name of this one can't be changed as it is used for the readiness and
+    # liveness probes, but you can adjust its config to your liking
+    traefik:
+      port: 9000
+      # Use hostPort if set.
+      # hostPort: 9000
 
-additionalArguments:
-  - "--log.level=DEBUG"
-  - "--entrypoints.websecure.http.tls"
-  - "--providers.kubernetesIngress.ingressClass=traefik-cert-manager"
-  - "--ping"
-  - "--metrics.prometheus"
-
-# Options for the main traefik service, where the entrypoints traffic comes
-# from.
-service:
-  enabled: true
-  type: LoadBalancer
-  # Additional annotations (e.g. for cloud provider specific config)
-  annotations: 
-    service.beta.kubernetes.io/do-loadbalancer-protocol: "tcp"
-    service.beta.kubernetes.io/do-loadbalancer-algorithm: "least_connections"
-    service.beta.kubernetes.io/do-loadbalancer-http-ports: "80"
-    service.beta.kubernetes.io/do-loadbalancer-tls-ports: "443"
-    service.beta.kubernetes.io/do-loadbalancer-tls-passthrough: "true"
-    service.beta.kubernetes.io/do-loadbalancer-enable-proxy-protocol: "true"
-    service.beta.kubernetes.io/do-loadbalancer-name: "glot-gateway"
-  # Additional entries here will be added to the service spec. Cannot contains
-  # type, selector or ports entries.
-  spec: 
-    externalTrafficPolicy: Local
-
-# Configure ports
-ports:
-  # The name of this one can't be changed as it is used for the readiness and
-  # liveness probes, but you can adjust its config to your liking
-  traefik:
-    port: 9000
-    # Use hostPort if set.
-    # hostPort: 9000
-
-    # Defines whether the port is exposed if service.type is LoadBalancer or
-    # NodePort.
-    #
-    # You SHOULD NOT expose the traefik port on production deployments.
-    # If you want to access it from outside of your cluster,
-    # use `kubectl proxy` or create a secure ingress
-    expose: false
-    # The exposed port for this service
-    exposedPort: 9000
-    # The port protocol (TCP/UDP)
-    protocol: TCP
-  web:
-    port: 8000
-    # hostPort: 8000
-    expose: true
-    exposedPort: 80
-    # The port protocol (TCP/UDP)
-    protocol: TCP
-    # Use nodeport if set. This is useful if you have configured Traefik in a
-    # LoadBalancer
-    # nodePort: 32080
-  websecure:
-    port: 8443
-    # hostPort: 8443
-    expose: true
-    exposedPort: 443
-    # The port protocol (TCP/UDP)
-    protocol: TCP
-    # nodePort: 32443
+      # Defines whether the port is exposed if service.type is LoadBalancer or
+      # NodePort.
+      #
+      # You SHOULD NOT expose the traefik port on production deployments.
+      # If you want to access it from outside of your cluster,
+      # use `kubectl proxy` or create a secure ingress
+      expose: false
+      # The exposed port for this service
+      exposedPort: 9000
+      # The port protocol (TCP/UDP)
+      protocol: TCP
+    web:
+      port: 8000
+      # hostPort: 8000
+      expose: true
+      exposedPort: 80
+      # The port protocol (TCP/UDP)
+      protocol: TCP
+      # Use nodeport if set. This is useful if you have configured Traefik in a
+      # LoadBalancer
+      # nodePort: 32080
+    websecure:
+      port: 8443
+      # hostPort: 8443
+      expose: true
+      exposedPort: 443
+      # The port protocol (TCP/UDP)
+      protocol: TCP
+      # nodePort: 32443
